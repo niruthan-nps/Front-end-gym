@@ -321,9 +321,10 @@
 
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { format, subDays } from 'date-fns';
+import { format, subDays, isSameDay } from 'date-fns';
 import { Pencil, Trash2 } from 'lucide-react';
 import axios from 'axios';
+
 
 interface Workout {
   id: string;
@@ -393,10 +394,22 @@ export function Dashboard() {
   };
 
   // Weekly progress calculation
+  // const last7DaysData = [...Array(7)].map((_, i) => {
+  //   const date = subDays(new Date(), i);
+  //   const dateStr = format(date, 'yyyy-MM-dd');
+  //   const dayWorkouts = workouts.filter((w) => w.date === dateStr);
+  //   const totalSets = dayWorkouts.reduce((acc, workout) => acc + workout.sets, 0);
+  //   return {
+  //     date: format(date, 'EEE'),
+  //     sets: totalSets,
+  //   };
+  // }).reverse();
+
   const last7DaysData = [...Array(7)].map((_, i) => {
     const date = subDays(new Date(), i);
-    const dateStr = format(date, 'yyyy-MM-dd');
-    const dayWorkouts = workouts.filter((w) => w.date === dateStr);
+    const dayWorkouts = workouts.filter((w) =>
+      w.date && isSameDay(new Date(w.date), date)
+    );
     const totalSets = dayWorkouts.reduce((acc, workout) => acc + workout.sets, 0);
     return {
       date: format(date, 'EEE'),
