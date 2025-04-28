@@ -156,8 +156,12 @@ export function Progress() {
     const weekStart = startOfWeek(subWeeks(new Date(), i));
     const weekEnd = endOfWeek(weekStart);
 
+    // const weekWorkouts = workouts.filter(
+    //   (w) => new Date(w.date) >= weekStart && new Date(w.date) <= weekEnd
+    // );
+
     const weekWorkouts = workouts.filter(
-      (w) => new Date(w.date) >= weekStart && new Date(w.date) <= weekEnd
+      (w) => new Date(w.createdAt) >= weekStart && new Date(w.createdAt) <= weekEnd
     );
 
     const totalWeight = weekWorkouts.reduce((acc, workout) => {

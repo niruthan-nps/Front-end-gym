@@ -20,6 +20,16 @@ export interface Exercise {
 //   date: string;
 // }
 
+// export interface Workout {
+//   id: string;
+//   title: string;
+//   type: string;
+//   description: string;
+//   reps: number;
+//   sets: number;
+//   weight: number;
+// }
+
 export interface Workout {
   id: string;
   title: string;
@@ -28,4 +38,5 @@ export interface Workout {
   reps: number;
   sets: number;
   weight: number;
+  createdAt: string;
 }
