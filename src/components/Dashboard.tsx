@@ -329,7 +329,8 @@ import axios from 'axios';
 interface Workout {
   id: string;
   name: string;
-  date: string; // format: yyyy-MM-dd
+  // date: string; // format: yyyy-MM-dd
+  date: Date;
   type: string;
   notes?: string;
   reps: number;
@@ -353,7 +354,8 @@ export function Dashboard() {
         return {
           id: item._id?.$oid || item.id,
           name: item.title || item.name,
-          date,
+          // date,
+          date: createdAt ? createdAt : new Date(),
           type: (item.description?.match(/Type:\s*(\w+)/)?.[1] || item.type || 'unknown'),
           notes: (item.description?.match(/Notes:\s*(.*)/)?.[1] || item.notes),
           reps: item.reps || 0,
@@ -405,16 +407,38 @@ export function Dashboard() {
   //   };
   // }).reverse();
 
+  // const last7DaysData = [...Array(7)].map((_, i) => {
+  //   const date = subDays(new Date(), i);
+  //   const dayWorkouts = workouts.filter((w) =>
+  //     w.date && isSameDay(new Date(w.date), date)
+  //   );
+  //   const totalSets = dayWorkouts.reduce((acc, workout) => acc + workout.sets, 0);
+  //   return {
+  //     date: format(date, 'EEE'),
+  //     sets: totalSets,
+  //   };
+  // }).reverse();
+
   const last7DaysData = [...Array(7)].map((_, i) => {
     const date = subDays(new Date(), i);
     const dayWorkouts = workouts.filter((w) =>
-      w.date && isSameDay(new Date(w.date), date)
+      isSameDay(w.date, date)
     );
+
+//     const day = subDays(new Date(), i);
+// const dayWorkouts = workouts.filter((w) =>
+//   w.createdAt && isSameDay(w.createdAt, day)
+// );
     const totalSets = dayWorkouts.reduce((acc, workout) => acc + workout.sets, 0);
     return {
       date: format(date, 'EEE'),
       sets: totalSets,
     };
+
+    // return {
+    //   date: format(day, 'EEE'),
+    //   sets: totalSets,
+    // };
   }).reverse();
 
   if (loading) {
