@@ -30,18 +30,6 @@ export interface Exercise {
 //   weight: number;
 // }
 
-// export interface Workout {
-//   id: string;
-//   title: string;
-//   type: string;
-//   description: string;
-//   reps: number;
-//   sets: number;
-//   weight: number;
-//   createdAt: string;
-// }
-
-
 export interface Workout {
   id: string;
   title: string;
@@ -50,5 +38,17 @@ export interface Workout {
   reps: number;
   sets: number;
   weight: number;
-  createdAt: Date; // <-- IMPORTANT: should be a Date object
+  createdAt: string;
 }
+
+
+// export interface Workout {
+//   id: string;
+//   title: string;
+//   type: string;
+//   description: string;
+//   reps: number;
+//   sets: number;
+//   weight: number;
+//   createdAt: Date; // <-- IMPORTANT: should be a Date object
+// }
