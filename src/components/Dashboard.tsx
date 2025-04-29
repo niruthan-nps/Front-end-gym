@@ -341,6 +341,16 @@ interface Workout {
   reps: number;
   sets: number;
   weight: number;
+
+  // id: string;
+  // title: string;
+  // date: string; 
+  // type: string;
+  // description: string;
+  // reps: number;
+  // sets: number;
+  // weight: number;
+  // // createdAt: string;
 }
 
 export function Dashboard() {

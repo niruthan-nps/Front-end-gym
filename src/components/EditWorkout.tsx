@@ -207,6 +207,154 @@
 // }
 
 
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { Workout } from '../types';
+
+// export function EditWorkout() {
+//   const [workout, setWorkout] = useState<Workout | null>(null);
+
+//   useEffect(() => {
+//     const savedWorkout = localStorage.getItem('editWorkout');
+//     if (savedWorkout) {
+//       setWorkout(JSON.parse(savedWorkout));
+//       localStorage.removeItem('editWorkout');
+//     }
+//   }, []);
+
+//   if (!workout) {
+//     return <div>No workout to edit</div>;
+//   }
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+
+//     try {
+//       const updatedWorkout = {
+//         title: workout.title,
+//         description: workout.description, // only notes
+//         type: workout.type,               // send separately now
+//         reps: workout.reps,
+//         sets: workout.sets,
+//         weight: workout.weight,
+//       };
+
+//       await axios.put(`http://localhost:8080/api/workouts/${workout.id}`, updatedWorkout);
+
+//       alert('Workout updated successfully!');
+//       window.location.href = '#/';
+//     } catch (error) {
+//       console.error('Failed to update workout:', error);
+//       alert('Failed to update workout.');
+//     }
+//   };
+
+//   return (
+//     <div className="p-4 max-w-2xl mx-auto">
+//       <h1 className="text-2xl font-bold mb-6">Edit Workout</h1>
+//       <form onSubmit={handleSubmit} className="space-y-6">
+//         {/* Workout Name */}
+//         <div>
+//           <label className="block text-sm font-medium text-gray-700">Workout Name</label>
+//           <input
+//             type="text"
+//             value={workout.title}
+//             onChange={(e) => setWorkout({ ...workout, title: e.target.value })}
+//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+//             required
+//           />
+//         </div>
+
+//         {/* Type */}
+//         <div>
+//           <label className="block text-sm font-medium text-gray-700">Type</label>
+//           <select
+//             value={workout.type}
+//             onChange={(e) => setWorkout({ ...workout, type: e.target.value })}
+//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+//           >
+//             <option value="push">Push</option>
+//             <option value="pull">Pull</option>
+//             <option value="legs">Legs</option>
+//             <option value="cardio">Cardio</option>
+//           </select>
+//         </div>
+
+//         {/* Notes */}
+//         <div>
+//           <label className="block text-sm font-medium text-gray-700">Notes</label>
+//           <textarea
+//             value={workout.description}
+//             onChange={(e) => setWorkout({ ...workout, description: e.target.value })}
+//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+//             rows={3}
+//           />
+//         </div>
+
+//         {/* Reps */}
+//         <div>
+//           <label className="block text-sm font-medium text-gray-700">Reps</label>
+//           <input
+//             type="number"
+//             value={workout.reps}
+//             onChange={(e) => setWorkout({ ...workout, reps: Number(e.target.value) })}
+//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+//             min="0"
+//             required
+//           />
+//         </div>
+
+//         {/* Sets */}
+//         <div>
+//           <label className="block text-sm font-medium text-gray-700">Sets</label>
+//           <input
+//             type="number"
+//             value={workout.sets}
+//             onChange={(e) => setWorkout({ ...workout, sets: Number(e.target.value) })}
+//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+//             min="0"
+//             required
+//           />
+//         </div>
+
+//         {/* Weight */}
+//         <div>
+//           <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
+//           <input
+//             type="number"
+//             value={workout.weight}
+//             onChange={(e) => setWorkout({ ...workout, weight: Number(e.target.value) })}
+//             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+//             min="0"
+//             required
+//           />
+//         </div>
+
+//         {/* Buttons */}
+//         <div className="flex gap-4">
+//           <button
+//             type="button"
+//             onClick={() => {
+//               window.location.href = '#/';
+//             }}
+//             className="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+//           >
+//             Cancel
+//           </button>
+//           <button
+//             type="submit"
+//             className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+//           >
+//             Save Changes
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Workout } from '../types';
@@ -217,30 +365,33 @@ export function EditWorkout() {
   useEffect(() => {
     const savedWorkout = localStorage.getItem('editWorkout');
     if (savedWorkout) {
-      setWorkout(JSON.parse(savedWorkout));
-      localStorage.removeItem('editWorkout');
+      try {
+        const parsedWorkout: Workout = JSON.parse(savedWorkout);
+        setWorkout(parsedWorkout);
+        localStorage.removeItem('editWorkout');
+      } catch (error) {
+        console.error('Failed to parse workout from localStorage:', error);
+      }
     }
   }, []);
 
-  if (!workout) {
-    return <div>No workout to edit</div>;
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!workout) return;
 
     try {
       const updatedWorkout = {
         title: workout.title,
-        description: workout.description, // only notes
-        type: workout.type,               // send separately now
+        description: workout.description,
+        type: workout.type,
         reps: workout.reps,
         sets: workout.sets,
         weight: workout.weight,
       };
-      
-      await axios.put(`http://localhost:8080/api/workouts/${workout.id}`, updatedWorkout);
 
+      console.log('Saving workout to edit:', workout);
+
+      await axios.put(`http://localhost:8080/api/workouts/${workout.id}`, updatedWorkout);
       alert('Workout updated successfully!');
       window.location.href = '#/';
     } catch (error) {
@@ -248,6 +399,10 @@ export function EditWorkout() {
       alert('Failed to update workout.');
     }
   };
+
+  if (!workout) {
+    return <div className="text-center mt-10 text-gray-600">No workout to edit</div>;
+  }
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
@@ -258,7 +413,7 @@ export function EditWorkout() {
           <label className="block text-sm font-medium text-gray-700">Workout Name</label>
           <input
             type="text"
-            value={workout.title}
+            value={workout.title ?? ''}
             onChange={(e) => setWorkout({ ...workout, title: e.target.value })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
@@ -269,10 +424,12 @@ export function EditWorkout() {
         <div>
           <label className="block text-sm font-medium text-gray-700">Type</label>
           <select
-            value={workout.type}
+            value={workout.type ?? ''}
             onChange={(e) => setWorkout({ ...workout, type: e.target.value })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            required
           >
+            <option value="">-- Select Type --</option>
             <option value="push">Push</option>
             <option value="pull">Pull</option>
             <option value="legs">Legs</option>
@@ -284,7 +441,7 @@ export function EditWorkout() {
         <div>
           <label className="block text-sm font-medium text-gray-700">Notes</label>
           <textarea
-            value={workout.description}
+            value={workout.description ?? ''}
             onChange={(e) => setWorkout({ ...workout, description: e.target.value })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             rows={3}
@@ -296,7 +453,7 @@ export function EditWorkout() {
           <label className="block text-sm font-medium text-gray-700">Reps</label>
           <input
             type="number"
-            value={workout.reps}
+            value={workout.reps ?? 0}
             onChange={(e) => setWorkout({ ...workout, reps: Number(e.target.value) })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             min="0"
@@ -309,7 +466,7 @@ export function EditWorkout() {
           <label className="block text-sm font-medium text-gray-700">Sets</label>
           <input
             type="number"
-            value={workout.sets}
+            value={workout.sets ?? 0}
             onChange={(e) => setWorkout({ ...workout, sets: Number(e.target.value) })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             min="0"
@@ -322,7 +479,7 @@ export function EditWorkout() {
           <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
           <input
             type="number"
-            value={workout.weight}
+            value={workout.weight ?? 0}
             onChange={(e) => setWorkout({ ...workout, weight: Number(e.target.value) })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             min="0"
