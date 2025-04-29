@@ -232,12 +232,13 @@ export function EditWorkout() {
     try {
       const updatedWorkout = {
         title: workout.title,
-        description: `Type: ${workout.type}\nNotes: ${workout.description}`,
+        description: workout.description, // only notes
+        type: workout.type,               // send separately now
         reps: workout.reps,
         sets: workout.sets,
         weight: workout.weight,
       };
-
+      
       await axios.put(`http://localhost:8080/api/workouts/${workout.id}`, updatedWorkout);
 
       alert('Workout updated successfully!');
